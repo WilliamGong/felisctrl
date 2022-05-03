@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 void process(StatusInfo &info, char *buf, int length) {
     int id = 0;
     for(int i = 0; i < 4; i++) {
-        id = buf[i];
+        id = id | buf[i];
         id << 8;
     }
 
