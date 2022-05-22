@@ -30,6 +30,7 @@ struct StatusInfo {
      */
 
     Mode currentMode;
+    unsigned short fault;
 
     uint8_t countStatus1;   //range: [0, 15]
 
@@ -47,24 +48,24 @@ struct StatusInfo {
     uint8_t realtimeAccelerator;
 
     short angle;    //range: [-100, 100] to [-35, 35] angle
-    unsigned short countStatus2;  //range: [0, 15]
+    uint8_t countStatus2;  //range: [0, 15]
 
     /**
      * From frame with id: 0x18F016D1
      * 
      */
 
-    uint8_t preesure;    //range: [0-11] to [0, 5.5] mpa
+    uint8_t pressure;    //range: [0-11] to [0, 5.5] mpa
 
-    bool brake;     //off: false, on: true
+    uint8_t brake;     //off: 0, on: 1, other: error
 
     GearSwitch remoteMode;
 
-    bool emergencyStatus;   //off: false, on: true
+    uint8_t emergencyStatus;   //off: 0, on: 1, other: error
 
     bool remoteStatus;      //off: false, on: true
 
-    unsigned short countStatus3;    //range: [0, 15]
+    uint8_t countStatus3;    //range: [0, 15]
 };
 
 struct mileageInfo {
