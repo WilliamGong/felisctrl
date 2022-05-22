@@ -6,6 +6,8 @@
 #include "statusinfo.h"
 
 const int BUFFSIZE = 1024;
+const uint8_t MASK_H4BIT = htons(0xF0);
+const uint8_t MASK_L4BIT = htons(0x0F);
 
 void process(StatusInfo &info, char *buf);
 
@@ -54,26 +56,26 @@ void process(StatusInfo &info, char *buf) {
         id << 8;
     }
 
-    if(id == 0x18F014D1) {
+    if(id == htonl(0x18F014D1)) {
         info.currentMode = (Mode)ntohs(buf[4]);
         info.fault = ntohs(((unsigned short)buf[6] << 8) | (unsigned short)buf[7]);
-        info.countStatus1 = ntohs((buf[11] & 0xF0) >> 4);
+        info.countStatus1 = ntohs((buf[11] & MASK_H4BIT) >> 4);
 
-    }else if(id == 0x18F015D1) {
-        info.remote = (Gear)ntohs(buf[4] & 0x0F);
-        info.realtime = (Gear)ntohs((buf[4] & 0xF0) >> 4);
+    }else if(id == htonl(0x18F015D1)) {
+        info.remote = (Gear)ntohs(buf[4] & MASK_L4BIT);
+        info.realtime = (Gear)ntohs((buf[4] & MASK_H4BIT) >> 4);
         info.remoteAccelerator = ntohs(buf[5]);
         info.realtimeAccelerator = ntohs(buf[6]);
         info.angle = ntohs(((unsigned short)buf[7] << 8) | (unsigned short)buf[8]);
-        info.countStatus2 = ntohs((buf[11] & 0xF0) >> 4);
+        info.countStatus2 = ntohs((buf[11] & MASK_H4BIT) >> 4);
 
-    }else if(id == 0x18F016D1) {
+    }else if(id == htonl(0x18F016D1)) {
         info.pressure = ntohs(buf[5]);
-        info.brake = ntohs((buf[6] & 0xF0) >> 4);
-        info.remoteMode = (GearSwitch)ntohs((buf[9] & 0x0C) >> 2);
-        info.emergencyStatus = ntohs((buf[9] & 0xC0) >> 6);
-        info.remoteStatus = ntohs(buf[11] & 0x0F);
-        info.countStatus3 = ntohs((buf[11] & 0xF0) >> 4);
+        info.brake = ntohs((buf[6] & MASK_H4BIT) >> 4);
+        info.remoteMode = (GearSwitch)ntohs((buf[9] & htons(0x0C)) >> 2);
+        info.emergencyStatus = ntohs((buf[9] & htons(0xC0)) >> 6);
+        info.remoteStatus = ntohs(buf[11] & MASK_L4BIT);
+        info.countStatus3 = ntohs((buf[11] & MASK_H4BIT) >> 4);
 
     }
 }
