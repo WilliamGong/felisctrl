@@ -44,6 +44,9 @@ int main(int argc, char **argv) {
         sendto(fd, buf, BUFFSIZE, 0, (sockaddr *)&serverAddr, lenAddr);
         recvfrom(fd, buf, BUFFSIZE, 0, (sockaddr *)&serverAddr, &lenAddr);
         process(info, buf);
+        ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
+                info.currentMode, info.fault, info.remote, info.realtime, 
+                info.angle, info.pressure, info.brake, info.remoteMode, info.emergencyStatus, info.remoteStatus);
     }
 
     return 0;
