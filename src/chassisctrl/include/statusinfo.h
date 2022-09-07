@@ -9,19 +9,19 @@ enum Gear {
         back = 0x2
     };
 
-    enum Mode {
-        poweroff = 0x00,
-        standby = 0x10,
-        remoteCtrl = 0x30,
-        wireCtrl = 0x40,
-        emergency = 0x50
-    };
+enum Mode {
+    poweroff = 0x00,
+    standby = 0x10,
+    remoteCtrl = 0x30,
+    wireCtrl = 0x40,
+    emergency = 0x50
+};
 
-    enum GearSwitch {
-        remote = 0x0,
-        wire = 0x1,
-        offline = 0x2
-    };
+enum GearSwitch {
+    remote = 0x0,
+    wire = 0x1,
+    offline = 0x2
+};
 
 struct StatusInfo {
     /**

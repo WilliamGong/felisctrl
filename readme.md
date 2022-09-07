@@ -4,17 +4,23 @@ Product info: http://www.falcon.com.cn/zdjszc/153.html
 
 The project is working-in-progress. 
 
-## Build
+# Build
 ---
-### Init workspace 
+## Init workspace 
 
     catkin_init_workspace
-### Make: 
+## Make: 
+
+    catkin build
+or
 
     catkin_make
 
-## Run
+# Usage
 ---
-### Start ROS master: 
+## Start ROS master: 
 
     roscore
+## Launch chassisctrl
+
+    rosrun chassisctrl chassisctrl_reciver
