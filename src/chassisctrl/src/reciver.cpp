@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 
     while(ros::ok()) {
         read(fd, buf, BUFFSIZE);
-        ROS_INFO("buf: %llx: ", charToULL(buf, 8));
+        //ROS_INFO("buf: %llx: ", charToULL(buf, 8));
         process(info, buf);
         /*
         ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
@@ -59,8 +59,8 @@ int main(int argc, char **argv) {
 }
 
 void process(StatusInfo &info, unsigned char *buf) {
-    int lenFrame = sizeof(buf) / 13;
-    for(int i = 0; i < lenFrame; i++) {
+    int lenFrame = BUFFSIZE / 13;
+    for(int i = 0; i < 1; i++) {
         unsigned char tmp[13];
         memcpy(tmp, buf+i*13, 13);
         CanFrame frame = CanFrame(tmp);
