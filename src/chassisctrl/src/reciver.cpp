@@ -22,16 +22,16 @@ int main(int argc, char **argv) {
 
     int fd = -1;
     int flagConnect = -1;
-    sockaddr_in serverAddr = {
-        AF_INET, 
-        htons(4001), 
-        inet_addr("192.168.1.221"), 
-        0
-    };
+    sockaddr_in serverAddr;
+    bzero(&serverAddr, sizeof(serverAddr));
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(4001);
+    serverAddr.sin_addr.s_addr = inet_addr("10.168.1.178");
+    
     socklen_t lenAddr = sizeof(sockaddr_in);
     unsigned char buf[BUFFSIZE] = {0};
 
-    fd = socket(AF_INET, SOCK_DGRAM, 0);
+    fd = socket(AF_INET, SOCK_STREAM, 0);
     if(fd < 0) {
         ROS_ERROR("Socket creation failed. ");
         return -1;
@@ -39,13 +39,14 @@ int main(int argc, char **argv) {
     flagConnect = connect(fd, (sockaddr *)&serverAddr, sizeof(serverAddr));
     if(flagConnect < 0) {
         ROS_ERROR("Connect failed. ");
+        return -1;
     }else {
         ROS_INFO("Connect succeed. ");
     }
 
     while(ros::ok()) {
-        send(fd, buf, BUFFSIZE, 0);
-        recv(fd, buf, BUFFSIZE, 0);
+        read(fd, buf, BUFFSIZE);
+        ROS_INFO("buf: %llx: ", charToULL(buf, 8));
         process(info, buf);
         /*
         ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
