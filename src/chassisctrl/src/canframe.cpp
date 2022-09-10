@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-CanFrame::CanFrame(char* data) {
+CanFrame::CanFrame(unsigned char* data) {
     this->head = data[0];
     int lenData = sizeof(data);
     memcpy(this->id, data+sizeof(char), 4*sizeof(char));
@@ -26,10 +26,10 @@ int CanFrame::getLength() {
     return len;
 }
 
-void CanFrame::getId(char *res) {
-    strcpy(res, this->id);
+void CanFrame::getId(unsigned char *res) {
+    memcpy(res, this->id, 4);
 }
 
-void CanFrame::getData(char *res) {
-    strcpy(res, this->data);
+void CanFrame::getData(unsigned char *res) {
+    memcpy(res, this->data, 8);
 }

@@ -1,8 +1,8 @@
 #pragma once
 
-const char MASK_TYPE = 0x80;
-const char MASK_RTR = 0x40;
-const char MASK_LENGTH = 0x0f;
+const unsigned char MASK_TYPE = 0x80;
+const unsigned char MASK_RTR = 0x40;
+const unsigned char MASK_LENGTH = 0x0f;
 
 enum type {
     standard = 0,
@@ -16,14 +16,14 @@ enum rtrType {
 class CanFrame {
     private:
         unsigned char head;
-        char id[4];
-        char data[8];
+        unsigned char id[4];
+        unsigned char data[8];
     public:
-        CanFrame(char *data);
+        CanFrame(unsigned char *data);
 
         int getType();
         int getRTR();
         int getLength();
-        void getId(char *res);
-        void getData(char *res);
+        void getId(unsigned char *res);
+        void getData(unsigned char *res);
 };
