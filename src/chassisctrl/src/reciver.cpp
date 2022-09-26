@@ -59,14 +59,12 @@ int main(int argc, char **argv) {
 }
 
 void process(StatusInfo &info, unsigned char *buf) {
-    int lenFrame = BUFFSIZE / 13;
-    for(int i = 0; i < 1; i++) {
-        unsigned char tmp[13];
-        memcpy(tmp, buf+i*13, 13);
-        CanFrame frame = CanFrame(tmp);
-        unsigned char id[4], data[8];
-        frame.getId(id);
-        frame.getData(data);
-        ROS_INFO("Frame ID: %x, Data: %llx",  charToUInt(id, 4), charToULL(data, 8));
-    }
+    unsigned char tmp[13];
+    memcpy(tmp, buf, 13);
+    CanFrame frame = CanFrame(tmp);
+    unsigned char id[4], data[8];
+    frame.getId(id);
+    frame.getData(data);
+    ROS_INFO("Frame ID: %x, Data: %llx",  charToUInt(id, 4), charToULL(data, 8));
+    
 }
