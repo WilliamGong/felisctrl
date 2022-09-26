@@ -39,14 +39,14 @@ CanFrame::CanFrame(unsigned char* frame) {
 }
 
 FrameType CanFrame::getType() {
-    int type = this->head & MASK_TYPE;
-    type >> 7;
+    unsigned char type = this->head & MASK_TYPE;
+    type >>= 7;
     return (FrameType)type;
 }
 
 RTRType CanFrame::getRTR() {
-    int rtr = this->head & MASK_RTR;
-    rtr >> 6;
+    unsigned char rtr = this->head & MASK_RTR;
+    rtr >>= 6;
     return (RTRType)rtr;
 }
 
@@ -76,7 +76,7 @@ bool CanFrame::getData(unsigned char *res) {
 }
 
 bool CanFrame::getFrame(unsigned char *res) {
-    if(res == nullptr) {
+    if(res == NULL) {
         return false;
     }
     res[0] = this->head;
