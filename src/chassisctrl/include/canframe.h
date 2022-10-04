@@ -21,10 +21,6 @@ enum RTRType {
 };
 
 class CanFrame {
-    private:
-        unsigned char head;
-        unsigned char id[4];
-        unsigned char data[8];
     public:
         CanFrame(unsigned char *frame);
         CanFrame();
@@ -35,4 +31,8 @@ class CanFrame {
         bool getId(unsigned char *res);
         bool getData(unsigned char *res);
         bool getFrame(unsigned char *res);
+    private:
+        unsigned char head_;
+        unsigned char id_[4];
+        unsigned char data_[8];
 };

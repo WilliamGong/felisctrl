@@ -21,14 +21,14 @@ int main(int argc, char **argv) {
     StatusInfo info = {poweroff, 0, 0, neutral, neutral, 0, 0, 0, 0, 0, 0, remote, 0, 0, 0};
 
     int fd = -1;
-    int flagConnect = -1;
-    sockaddr_in serverAddr;
-    bzero(&serverAddr, sizeof(serverAddr));
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(4001);
-    serverAddr.sin_addr.s_addr = inet_addr("10.168.1.178");
+    int flag_connect = -1;
+    sockaddr_in server_addr;
+    bzero(&server_addr, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(4001);
+    server_addr.sin_addr.s_addr = inet_addr("10.168.1.178");
     
-    socklen_t lenAddr = sizeof(sockaddr_in);
+    socklen_t len_addr = sizeof(sockaddr_in);
     unsigned char buf[BUFFSIZE] = {0};
 
     fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -36,8 +36,8 @@ int main(int argc, char **argv) {
         ROS_ERROR("Socket creation failed. ");
         return -1;
     }
-    flagConnect = connect(fd, (sockaddr *)&serverAddr, sizeof(serverAddr));
-    if(flagConnect < 0) {
+    flag_connect = connect(fd, (sockaddr *)&server_addr, sizeof(server_addr));
+    if(flag_connect < 0) {
         ROS_ERROR("Connect failed. ");
         return -1;
     }else {
