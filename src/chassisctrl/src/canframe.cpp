@@ -1,6 +1,7 @@
 #include "canframe.h"
 
 #include <cstring>
+#include <iostream>
 
 CanFrame::CanFrame() {
     /**
@@ -91,6 +92,35 @@ bool CanFrame::getFrame(unsigned char *res) {
         }
         memcpy(res+1, this->id_, LEN_ID_EXTENED);
         memcpy(res+1+LEN_ID_EXTENED, this->data_, LEN_DATA);
+    }
+    return true;
+}
+
+bool CanFrame::setType(FrameType type) {
+    if(type == STANDARD) {
+        this->head_ = this->head_ & MASK_TYPE;
+    }
+}
+
+bool CanFrame::setId(unsigned char *id) {
+    int len = sizeof(id);
+    if(this->getType() == STANDARD && len == LEN_ID_STANDARD) {
+        memcpy(this->id_, id, LEN_ID_STANDARD);
+        return true;
+    }else if(this->getType() == EXTENDED && len == LEN_ID_EXTENED) {
+        memcpy(this->id_, id, LEN_ID_EXTENED);
+        return true;
+    }else {
+        return false;
+    }
+}
+
+bool CanFrame::setData(unsigned char *data) {
+    if(sizeof(data) > LEN_DATA) {
+        std::cout << "Warning: data recived is too large, only set " << LEN_DATA << "bytes front. " << std::endl;
+        memcpy(this->data_, data, LEN_DATA);
+    }else {
+        memcpy(this->data_, data, sizeof(data));
     }
     return true;
 }

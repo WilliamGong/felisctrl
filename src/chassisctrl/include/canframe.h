@@ -1,3 +1,15 @@
+/**
+ * @file canframe.h
+ * @author William Gong (gtl119@live.com)
+ * @brief 
+ * CanFrame class is a wrapper of CAN frame, support standard and extended, remote and data type. 
+ * @version 0.1
+ * @date 2022-11-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #pragma once
 
 const int LEN_STANDARD = 11;
@@ -31,6 +43,11 @@ class CanFrame {
         bool getId(unsigned char *res);
         bool getData(unsigned char *res);
         bool getFrame(unsigned char *res);
+        
+        bool setType(FrameType type);
+        bool setId(unsigned char *id);
+        bool setData(unsigned char *data);
+
     private:
         unsigned char head_;
         unsigned char id_[4];
