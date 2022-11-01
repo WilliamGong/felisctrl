@@ -6,6 +6,7 @@
  * Gear: stands for the gear of chassis, could be forward, neutral and back. 
  * Mode: stands for the operating mode of chassis
  * GearSwitch: stands for the status of the control mode, wire control or remote control
+ * Brake: stands for the brake of chassis, OFF means brake released, ON means brake enable. 
  * @version 0.1
  * @date 2022-11-01
  * 
@@ -33,4 +34,9 @@ enum GearSwitch {
     REMOTE = 0x0,
     WIRE = 0x1,
     OFFLINE = 0x2
+};
+
+enum Brake {
+    OFF = 0x0,
+    ON = 0x1
 };
