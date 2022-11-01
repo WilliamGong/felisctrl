@@ -16,21 +16,21 @@
 #pragma once
 
 enum Gear {
-        neutral = 0x0,
-        forward = 0x1,
-        back = 0x2
+        NEUTRAL = 0x0,
+        FORWARD = 0x1,
+        BACK = 0x2
 };
 
 enum Mode {
-    poweroff = 0x00,
-    standby = 0x10,
-    remoteCtrl = 0x30,
-    wireCtrl = 0x40,
-    emergency = 0x50
+    POWEROFF = 0x00,
+    STANDBY = 0x10,
+    REMOTE_CTRL = 0x30,
+    WIRE_CTRL = 0x40,
+    EMERGENCY = 0x50
 };
 
 enum GearSwitch {
-    remote = 0x0,
-    wire = 0x1,
-    offline = 0x2
+    REMOTE = 0x0,
+    WIRE = 0x1,
+    OFFLINE = 0x2
 };
