@@ -16,7 +16,6 @@
 
 #include <stdint.h>
 
-const int LEN_DATA = 8;
 
 enum ModeCtrl {
     /**
@@ -24,14 +23,14 @@ enum ModeCtrl {
      * Just used for control info, DO NOT use to other cases. 
      * 
      */
-    REMOTE_CTRL = 0x0,
-    WIRE_CTRL = 0x1
+    REMOTE_ = 0x0,
+    WIRE_ = 0x1
 };
 
 class MotionCtrl {
     public:
-        MotionCtrl();
-        ~MotionCtrl();
+        //MotionCtrl();
+        //~MotionCtrl();
 
         void setCtrlMode(ModeCtrl val) {this->control_mode_ = val;}
         void setGear(Gear val) {this->gear_ = val;}
@@ -43,7 +42,7 @@ class MotionCtrl {
         bool getData(unsigned char* res);
 
     private:
-        ModeCtrl control_mode_ = REMOTE_CTRL;
+        ModeCtrl control_mode_ = REMOTE_;
         Gear gear_ = NEUTRAL;
         Brake brake_ = ON;
         uint8_t accelerator_ = 0; // range: [0, 100]

@@ -13,6 +13,8 @@
 
 #include <cstring>
 
+const int LEN_DATA = 8;
+
 void MotionCtrl::setAccelerator(uint8_t val) {
     if(val > 100) {
         this->accelerator_ = 100;
@@ -66,4 +68,5 @@ bool MotionCtrl::getData(unsigned char* res) {
     data[6] = (unsigned char)this->pressure_;
 
     memcpy(res, data, LEN_DATA);
+    return true;
 }

@@ -28,8 +28,8 @@ enum FrameType {
 };
 
 enum RTRType {
-    DATA= 0,
-    REMOTE = 1
+    DATA_FRAME = 0,
+    REMOTE_FRAME = 1
 };
 
 class CanFrame {
@@ -44,7 +44,7 @@ class CanFrame {
         bool getData(unsigned char *res);
         bool getFrame(unsigned char *res);
         
-        bool setType(FrameType type);
+        void setType(FrameType type);
         bool setId(unsigned char *id);
         bool setData(unsigned char *data);
 

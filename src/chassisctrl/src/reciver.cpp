@@ -1,4 +1,3 @@
-#include "statusinfo.h"
 #include "motionctrl.h"
 #include "canframe.h"
 #include "aux.h"
@@ -13,14 +12,12 @@ const int BUFFSIZE = 13;
 const uint8_t MASK_H4BIT = htons(0xF0);
 const uint8_t MASK_L4BIT = htons(0x0F);
 
-void process(StatusInfo &info, unsigned char *buf);
+void process(unsigned char *buf);
 void writeData(unsigned char* sendbuf);
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "chassisctrl_reciver");
     ros::NodeHandle n;
-
-    StatusInfo info = {poweroff, 0, 0, neutral, neutral, 0, 0, 0, 0, 0, 0, remote, 0, 0, 0};
 
     int fd = -1;
     int flag_connect = -1;
@@ -50,7 +47,7 @@ int main(int argc, char **argv) {
     while(ros::ok()) {
         read(fd, recvbuf, BUFFSIZE);
         //ROS_INFO("buf: %llx: ", charToULL(buf, 8));
-        process(info, recvbuf);
+        process(recvbuf);
         /*
         ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
                 info.currentMode, info.fault, info.remote, info.realtime, 
@@ -63,7 +60,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void process(StatusInfo &info, unsigned char *buf) {
+void process(unsigned char *buf) {
     unsigned char tmp[13];
     memcpy(tmp, buf, 13);
     CanFrame frame = CanFrame(tmp);
@@ -85,7 +82,7 @@ void writeData(unsigned char* sendbuf) {
     write_id[2] = 0xd1;
     write_id[3] = 0xd0;
 
-    motion.setCtrlMode(WIRE_CTRL);
+    motion.setCtrlMode(WIRE_);
     motion.setAngle(-50);
     if(!motion.getData(data)) {
         ROS_ERROR("Error: motion control data set failed. ");

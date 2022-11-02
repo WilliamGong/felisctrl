@@ -68,7 +68,7 @@ bool CanFrame::getId(unsigned char *res) {
 }
 
 bool CanFrame::getData(unsigned char *res) {
-    if(sizeof(res) < LEN_DATA || this->getRTR() == REMOTE) {
+    if(sizeof(res) < LEN_DATA || this->getRTR() == REMOTE_FRAME) {
         return false;
     }
     memcpy(res, this->data_, LEN_DATA);
@@ -96,9 +96,11 @@ bool CanFrame::getFrame(unsigned char *res) {
     return true;
 }
 
-bool CanFrame::setType(FrameType type) {
+void CanFrame::setType(FrameType type) {
     if(type == STANDARD) {
         this->head_ = this->head_ & MASK_TYPE;
+    }else if(type == EXTENDED) {
+        this->head_ = this->head_ | MASK_TYPE;
     }
 }
 
