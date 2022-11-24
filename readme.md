@@ -24,3 +24,4 @@ or
 ## Launch chassisctrl
 
     rosrun chassisctrl chassisctrl_reciver
+    rosrun chassisctrl chassisctrl_sender

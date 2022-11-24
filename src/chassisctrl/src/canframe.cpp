@@ -16,7 +16,7 @@ CanFrame::CanFrame() {
      */
 
     this->head_ = 0x88;
-    memset(this->id_, 0, sizeof(this->head_));
+    memset(this->id_, 0, sizeof(this->id_));
     memset(this->data_, 0, sizeof(this->data_));
 }
 
@@ -75,19 +75,20 @@ bool CanFrame::getData(unsigned char *res) {
     return true;
 }
 
-bool CanFrame::getFrame(unsigned char *res) {
+bool CanFrame::getFrame(unsigned char *res, int len) {
+    //std::cout << "len: " << len << std::endl;
     if(res == NULL) {
         return false;
     }
     res[0] = this->head_;
     if(this->getType() == STANDARD) {
-        if(sizeof(res) < LEN_STANDARD) {
+        if(len < LEN_STANDARD) {
             return false;
         }
         memcpy(res+1, this->id_, LEN_ID_STANDARD);
         memcpy(res+1+LEN_ID_STANDARD, this->data_, LEN_DATA);
     }else if(this->getType() == EXTENDED) {
-        if(sizeof(res) < LEN_EXTENED) {
+        if(len < LEN_EXTENED) {
             return false;
         }
         memcpy(res+1, this->id_, LEN_ID_EXTENED);
@@ -106,10 +107,11 @@ void CanFrame::setType(FrameType type) {
 
 bool CanFrame::setId(unsigned char *id) {
     int len = sizeof(id);
-    if(this->getType() == STANDARD && len == LEN_ID_STANDARD) {
+    //std::cout << "len: " << len << std::endl;
+    if(this->getType() == STANDARD && len >= LEN_ID_STANDARD) {
         memcpy(this->id_, id, LEN_ID_STANDARD);
         return true;
-    }else if(this->getType() == EXTENDED && len == LEN_ID_EXTENED) {
+    }else if(this->getType() == EXTENDED && len >= LEN_ID_EXTENED) {
         memcpy(this->id_, id, LEN_ID_EXTENED);
         return true;
     }else {

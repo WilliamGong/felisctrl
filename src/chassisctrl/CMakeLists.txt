@@ -134,8 +134,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_reciver src/reciver.cpp src/canframe.cpp src/aux.cpp src/motionctrl.cpp)
-add_executable(${PROJECT_NAME}_sender src/reciver.cpp src/canframe.cpp src/aux.cpp src/motionctrl.cpp)
+add_executable(${PROJECT_NAME}_reciver src/reciver.cpp src/canframe.cpp src/aux.cpp)
+add_executable(${PROJECT_NAME}_sender src/sender.cpp src/canframe.cpp src/aux.cpp src/motionctrl.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

@@ -42,7 +42,7 @@ class CanFrame {
         int getLength();
         bool getId(unsigned char *res);
         bool getData(unsigned char *res);
-        bool getFrame(unsigned char *res);
+        bool getFrame(unsigned char *res, int len);
         
         void setType(FrameType type);
         bool setId(unsigned char *id);

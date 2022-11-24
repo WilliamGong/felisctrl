@@ -50,6 +50,7 @@ int main(int argc, char **argv) {
                 info.angle, info.pressure, info.brake, info.remoteMode, info.emergencyStatus, info.remoteStatus);
         */
        writeData(sendbuf);
+       ROS_INFO("frame: %llx", charToULL(sendbuf, 8));
        write(fd, sendbuf, BUFFSIZE);
     }
 
@@ -68,7 +69,7 @@ void writeData(unsigned char* sendbuf) {
     write_id[3] = 0xd0;
 
     motion.setCtrlMode(WIRE_);
-    motion.setAngle(-50);
+    motion.setAngle(0);
     if(!motion.getData(data)) {
         ROS_ERROR("Error: motion control data set failed. ");
     }
@@ -81,7 +82,8 @@ void writeData(unsigned char* sendbuf) {
         ROS_ERROR("Data set failed. ");
     }
 
-    if(!frame.getData(sendbuf)) {
+    //ROS_INFO("len of sendbuf: %d", sizeof(sendbuf));
+    if(!frame.getFrame(sendbuf, BUFFSIZE)) {
         ROS_ERROR("write buffer set failed. ");
     }
 }
