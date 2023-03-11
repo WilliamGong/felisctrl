@@ -23,5 +23,12 @@ or
     roscore
 ## Launch chassisctrl
 
-    rosrun chassisctrl chassisctrl_reciver
-    rosrun chassisctrl chassisctrl_sender
+    roslaunch chassisctrl run.launch
+
+OR    
+
+```
+rosrun chassisctrl chassisctrl_core
+rosrun chassisctrl chassisctrl_reciver
+rosrun chassisctrl chassisctrl_sender
+```

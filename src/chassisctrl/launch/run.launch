@@ -1,0 +1,5 @@
+<launch>
+    <node name="chassisctrl_core" pkg="chassisctrl" type="chassisctrl_core" output="screen" />
+    <node name="chassisctrl_reciver" pkg="chassisctrl" type="chassisctrl_reciver" output="screen" />
+    <node name="chassisctrl_sender" pkg="chassisctrl" type="chassisctrl_sender" output="screen" />
+</launch>
