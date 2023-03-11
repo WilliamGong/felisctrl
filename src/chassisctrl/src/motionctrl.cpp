@@ -9,11 +9,14 @@
  * 
  */
 
-#include "motionctrl.h"
+#include "ctrl/motionctrl.h"
 
-#include <cstring>
-
-const int LEN_DATA = 8;
+MotionCtrl::MotionCtrl() {
+    id_[0] = 0x0c;
+    id_[1] = 0x08;
+    id_[2] = 0xd1;
+    id_[3] = 0xd0;
+}
 
 void MotionCtrl::setAccelerator(uint8_t val) {
     if(val > 100) {
@@ -46,16 +49,16 @@ void MotionCtrl::setPressure(uint8_t val) {
 }
 
 bool MotionCtrl::getData(unsigned char* res) {
-    if(sizeof(res) < 8) {
+    if(sizeof(res) < LEN_DATA_CTRL) {
         return false;
     }
 
-    unsigned char data[8] = {0};
+    unsigned char data[LEN_DATA_CTRL] = {0};
 
     data[0] = (unsigned char)this->control_mode_;
 
     unsigned char data_1 = 0;
-    data_1 |= (unsigned char)this->brake_;
+    data_1 |= (unsigned char)this->is_parking;
     data_1 <<= 4;
     data_1 |= (unsigned char)this->gear_;
     data[1] = data_1;
@@ -67,6 +70,6 @@ bool MotionCtrl::getData(unsigned char* res) {
 
     data[6] = (unsigned char)this->pressure_;
 
-    memcpy(res, data, LEN_DATA);
+    memcpy(res, data, LEN_DATA_CTRL);
     return true;
 }

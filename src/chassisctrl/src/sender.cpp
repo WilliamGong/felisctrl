@@ -1,6 +1,7 @@
-#include "motionctrl.h"
+#include "ctrl/motionctrl.h"
 #include "canframe.h"
 #include "aux.h"
+#include "chassisctrl/frame.h"
 
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -12,11 +13,16 @@ const int BUFFSIZE = 13;
 const uint8_t MASK_H4BIT = htons(0xF0);
 const uint8_t MASK_L4BIT = htons(0x0F);
 
-void writeData(unsigned char* sendbuf);
+unsigned char sendbuf[BUFFSIZE] = {0};
+
+//void writeData(unsigned char* sendbuf);
+void ctrlCallBack(const chassisctrl::frame::ConstPtr& msg);
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "chassisctrl_sender");
     ros::NodeHandle n;
+
+    ros::Subscriber sub = n.subscribe<chassisctrl::frame>("frame_ctrl", 1, ctrlCallBack);
 
     int fd = -1;
     int flag_connect = -1;
@@ -28,7 +34,6 @@ int main(int argc, char **argv) {
     
     socklen_t len_addr = sizeof(sockaddr_in);
     unsigned char recvbuf[BUFFSIZE] = {0};
-    unsigned char sendbuf[BUFFSIZE] = {0};
 
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if(fd < 0) {
@@ -44,12 +49,13 @@ int main(int argc, char **argv) {
     }
 
     while(ros::ok()) {
+        ros::spinOnce();
         /*
         ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
                 info.currentMode, info.fault, info.remote, info.realtime, 
                 info.angle, info.pressure, info.brake, info.remoteMode, info.emergencyStatus, info.remoteStatus);
         */
-       writeData(sendbuf);
+       //writeData(sendbuf);
        ROS_INFO("frame: %llx", charToULL(sendbuf, 8));
        write(fd, sendbuf, BUFFSIZE);
     }
@@ -57,17 +63,22 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+/*
 void writeData(unsigned char* sendbuf) {
     MotionCtrl motion = MotionCtrl();
     unsigned char data[8] = {0};
     CanFrame frame = CanFrame();
 
     unsigned char write_id[4];
+    motion.getId(write_id);
+    /*
     write_id[0] = 0x0c;
     write_id[1] = 0x08;
     write_id[2] = 0xd1;
     write_id[3] = 0xd0;
+    */
 
+    /*
     motion.setCtrlMode(WIRE_);
     motion.setAngle(0);
     if(!motion.getData(data)) {
@@ -83,6 +94,26 @@ void writeData(unsigned char* sendbuf) {
     }
 
     //ROS_INFO("len of sendbuf: %d", sizeof(sendbuf));
+    if(!frame.getFrame(sendbuf, BUFFSIZE)) {
+        ROS_ERROR("write buffer set failed. ");
+    }
+}
+*/
+
+void ctrlCallBack(const chassisctrl::frame::ConstPtr& msg) {
+    unsigned char id[4], data[8];
+    uintToChar(msg->id, id, 4);
+    uintToChar(msg->data, data, 8);
+    CanFrame frame = CanFrame();
+
+    if(!frame.setId(id)) {
+        ROS_ERROR("ID set failed. ");
+    }
+
+    if(!frame.setData(data)) {
+        ROS_ERROR("Data set failed. ");
+    }
+
     if(!frame.getFrame(sendbuf, BUFFSIZE)) {
         ROS_ERROR("write buffer set failed. ");
     }

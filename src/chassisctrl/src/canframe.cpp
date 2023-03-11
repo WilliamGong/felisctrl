@@ -30,11 +30,11 @@ CanFrame::CanFrame(unsigned char* frame) {
     this->head_ = frame[0];
     if(this->getType() == STANDARD) {
         memcpy(this->id_, frame+1, LEN_ID_STANDARD);
-        memcpy(this->data_, frame+1+LEN_ID_STANDARD, LEN_DATA);
+        memcpy(this->data_, frame+1+LEN_ID_STANDARD, LEN_FRAME_DATA);
 
     }else if(this->getType() == EXTENDED) {
         memcpy(this->id_, frame+1, LEN_ID_EXTENED);
-        memcpy(this->data_, frame+1+LEN_ID_EXTENED, LEN_DATA);
+        memcpy(this->data_, frame+1+LEN_ID_EXTENED, LEN_FRAME_DATA);
     }
 }
 
@@ -68,10 +68,10 @@ bool CanFrame::getId(unsigned char *res) {
 }
 
 bool CanFrame::getData(unsigned char *res) {
-    if(sizeof(res) < LEN_DATA || this->getRTR() == REMOTE_FRAME) {
+    if(sizeof(res) < LEN_FRAME_DATA || this->getRTR() == REMOTE_FRAME) {
         return false;
     }
-    memcpy(res, this->data_, LEN_DATA);
+    memcpy(res, this->data_, LEN_FRAME_DATA);
     return true;
 }
 
@@ -86,13 +86,13 @@ bool CanFrame::getFrame(unsigned char *res, int len) {
             return false;
         }
         memcpy(res+1, this->id_, LEN_ID_STANDARD);
-        memcpy(res+1+LEN_ID_STANDARD, this->data_, LEN_DATA);
+        memcpy(res+1+LEN_ID_STANDARD, this->data_, LEN_FRAME_DATA);
     }else if(this->getType() == EXTENDED) {
         if(len < LEN_EXTENED) {
             return false;
         }
         memcpy(res+1, this->id_, LEN_ID_EXTENED);
-        memcpy(res+1+LEN_ID_EXTENED, this->data_, LEN_DATA);
+        memcpy(res+1+LEN_ID_EXTENED, this->data_, LEN_FRAME_DATA);
     }
     return true;
 }
@@ -120,9 +120,9 @@ bool CanFrame::setId(unsigned char *id) {
 }
 
 bool CanFrame::setData(unsigned char *data) {
-    if(sizeof(data) > LEN_DATA) {
-        std::cout << "Warning: data recived is too large, only set " << LEN_DATA << "bytes front. " << std::endl;
-        memcpy(this->data_, data, LEN_DATA);
+    if(sizeof(data) > LEN_FRAME_DATA) {
+        std::cout << "Warning: data recived is too large, only set " << LEN_FRAME_DATA << "bytes front. " << std::endl;
+        memcpy(this->data_, data, LEN_FRAME_DATA);
     }else {
         memcpy(this->data_, data, sizeof(data));
     }

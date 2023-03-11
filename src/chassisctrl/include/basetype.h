@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <string>
+
 enum Gear {
         NEUTRAL = 0x0,
         FORWARD = 0x1,
@@ -36,7 +38,30 @@ enum GearSwitch {
     OFFLINE = 0x2
 };
 
-enum Brake {
-    OFF = 0x0,
-    ON = 0x1
+enum Error {
+    NORMAL = 0x0000,
+    ACTUATION_VOLTAGE_HIGH = 0x1001,
+    ACTUATION_VOLTAGE_LOW = 0x1002,
+    CTRL_VOLTAGE_HIGH = 0x1003,
+    CTRL_VOLTAGE_LOW = 0x1004,
+    ACTUATION_ERR = 0x2001,
+    STEERING_ERR = 0x2101,
+    BRAKE_ERR = 0x2201,
+    PARKING_ERR = 0x2301,
+    CONTROL_ERR = 0x2401
 };
+
+const std::string STR_GEAR_NEUTRAL = "neutral";
+const std::string STR_GEAR_FORWARD = "forward";
+const std::string STR_GEAR_BACK = "back";
+
+
+const std::string STR_MODE_POWEROFF = "power off";
+const std::string STR_MODE_STANDBY = "standby";
+const std::string STR_MODE_REMOTE_CTRL = "remote control";
+const std::string STR_MODE_WIRE_CTRL = "wire control";
+const std::string STR_MODE_EMERGENCY = "emergency";
+
+const std::string STR_GEARSWITCH_REMOTE = "remote";
+const std::string STR_GEARSWITCH_WIRE = "wire";
+const std::string STR_GEARSWITCH_OFFLINE = "offline";

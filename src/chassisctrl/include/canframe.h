@@ -16,7 +16,7 @@ const int LEN_STANDARD = 11;
 const int LEN_EXTENED = 13;
 const int LEN_ID_STANDARD = 2;
 const int LEN_ID_EXTENED = 4;
-const int LEN_DATA = 8;
+const int LEN_FRAME_DATA = 8;
 
 const unsigned char MASK_TYPE = 0x80;
 const unsigned char MASK_RTR = 0x40;

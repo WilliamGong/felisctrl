@@ -1,0 +1,3 @@
+chassisctrl:
+  can_address: 10.168.1.178
+  can_port: 4001

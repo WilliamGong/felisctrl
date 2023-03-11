@@ -13,6 +13,7 @@
 #pragma once
 
 #include "basetype.h"
+#include "ctrl.h"
 
 #include <stdint.h>
 
@@ -27,14 +28,14 @@ enum ModeCtrl {
     WIRE_ = 0x1
 };
 
-class MotionCtrl {
+class MotionCtrl : public Ctrl {
     public:
-        //MotionCtrl();
+        MotionCtrl();
         //~MotionCtrl();
 
         void setCtrlMode(ModeCtrl val) {this->control_mode_ = val;}
         void setGear(Gear val) {this->gear_ = val;}
-        void setBrake(Brake val) {this->brake_ = val;}
+        void setBrake(bool val) {this->is_parking = val;}
         void setAccelerator(uint8_t val);
         void setAngle(short val);
         void setPressure(uint8_t val);
@@ -44,7 +45,7 @@ class MotionCtrl {
     private:
         ModeCtrl control_mode_ = REMOTE_;
         Gear gear_ = NEUTRAL;
-        Brake brake_ = ON;
+        bool is_parking = 1;
         uint8_t accelerator_ = 0; // range: [0, 100]
         short angle_ = 0; // range: [-100, 100]
         uint8_t pressure_ = 0; // range: [0, 10]

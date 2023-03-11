@@ -52,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   chassisstatus.msg
+  frame.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -122,9 +123,21 @@ include_directories(
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/chassisctrl.cpp
-# )
+add_library(lib${PROJECT_NAME} SHARED
+  src/aux.cpp
+  src/motionctrl.cpp
+  src/ccsctrl.cpp
+  src/configctrl.cpp
+  src/statusinfo.cpp
+  src/mileageinfo.cpp 
+  src/wheelspeedinfo.cpp 
+  src/batteryinfo.cpp 
+  src/driveinfo.cpp
+)
+
+add_library(libcanframe SHARED
+  src/canframe.cpp
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -134,8 +147,9 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_reciver src/reciver.cpp src/canframe.cpp src/aux.cpp)
-add_executable(${PROJECT_NAME}_sender src/sender.cpp src/canframe.cpp src/aux.cpp src/motionctrl.cpp)
+add_executable(${PROJECT_NAME}_core src/core.cpp)
+add_executable(${PROJECT_NAME}_reciver src/reciver.cpp)
+add_executable(${PROJECT_NAME}_sender src/sender.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -145,6 +159,12 @@ add_executable(${PROJECT_NAME}_sender src/sender.cpp src/canframe.cpp src/aux.cp
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
+add_dependencies(
+  ${PROJECT_NAME}_core 
+  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+  ${catkin_EXPORTED_TARGETS}
+)
+
 add_dependencies(
   ${PROJECT_NAME}_reciver 
   ${${PROJECT_NAME}_EXPORTED_TARGETS} 
@@ -158,12 +178,21 @@ add_dependencies(
 )
 
 ## Specify libraries to link a library or executable target against
+target_link_libraries(${PROJECT_NAME}_core
+  ${catkin_LIBRARIES}
+  lib${PROJECT_NAME}
+)
+
 target_link_libraries(${PROJECT_NAME}_reciver
   ${catkin_LIBRARIES}
+  lib${PROJECT_NAME}
+  libcanframe
 )
 
 target_link_libraries(${PROJECT_NAME}_sender
   ${catkin_LIBRARIES}
+  lib${PROJECT_NAME}
+  libcanframe
 )
 
 #############

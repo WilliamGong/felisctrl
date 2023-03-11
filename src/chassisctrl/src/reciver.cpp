@@ -1,5 +1,6 @@
 #include "canframe.h"
 #include "aux.h"
+#include "chassisctrl/frame.h"
 
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -11,12 +12,13 @@ const int BUFFSIZE = 13;
 const uint8_t MASK_H4BIT = htons(0xF0);
 const uint8_t MASK_L4BIT = htons(0x0F);
 
-void process(unsigned char *buf);
-void writeData(unsigned char* sendbuf);
+void process(unsigned char *buf, ros::Publisher pub);
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "chassisctrl_reciver");
     ros::NodeHandle n;
+
+    ros::Publisher pub = n.advertise<chassisctrl::frame>("frame_info", 1);
 
     int fd = -1;
     int flag_connect = -1;
@@ -46,24 +48,32 @@ int main(int argc, char **argv) {
     while(ros::ok()) {
         read(fd, recvbuf, BUFFSIZE);
         ROS_INFO("buf: %llx: ", charToULL(recvbuf, 8));
-        process(recvbuf);
+        process(recvbuf, pub);
         /*
         ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
                 info.currentMode, info.fault, info.remote, info.realtime, 
                 info.angle, info.pressure, info.brake, info.remoteMode, info.emergencyStatus, info.remoteStatus);
         */
+       ros::spinOnce();
     }
 
     return 0;
 }
 
-void process(unsigned char *buf) {
+void process(unsigned char *buf, ros::Publisher pub) {
+
+    chassisctrl::frame frame_info;
     unsigned char tmp[13];
     memcpy(tmp, buf, 13);
     CanFrame frame = CanFrame(tmp);
     unsigned char id[4], data[8];
+
     frame.getId(id);
     frame.getData(data);
+    frame_info.id = charToUInt(id, 4);
+    frame_info.data = charToULL(data, 8);
+
     ROS_INFO("Frame ID: %x, Data: %llx",  charToUInt(id, 4), charToULL(data, 8));
+    pub.publish(frame_info);
     
 }
