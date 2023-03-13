@@ -53,6 +53,7 @@ add_message_files(
   FILES
   chassisstatus.msg
   frame.msg
+  carctrl.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -150,6 +151,7 @@ add_library(libcanframe SHARED
 add_executable(${PROJECT_NAME}_core src/core.cpp)
 add_executable(${PROJECT_NAME}_reciver src/reciver.cpp)
 add_executable(${PROJECT_NAME}_sender src/sender.cpp)
+add_executable(${PROJECT_NAME}_teleop src/teleop.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -177,6 +179,12 @@ add_dependencies(
   ${catkin_EXPORTED_TARGETS}
 )
 
+add_dependencies(
+  ${PROJECT_NAME}_teleop
+  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
+  ${catkin_EXPORTED_TARGETS}
+)
+
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_core
   ${catkin_LIBRARIES}
@@ -193,6 +201,10 @@ target_link_libraries(${PROJECT_NAME}_sender
   ${catkin_LIBRARIES}
   lib${PROJECT_NAME}
   libcanframe
+)
+
+target_link_libraries(${PROJECT_NAME}_teleop
+  ${catkin_LIBRARIES}
 )
 
 #############

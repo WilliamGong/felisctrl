@@ -14,6 +14,7 @@
 #include "info.h"
 #include "aux.h"
 #include "chassisctrl/frame.h"
+#include "chassisctrl/carctrl.h"
 
 #include "ros/ros.h"
 #include <cstdio>
@@ -28,32 +29,26 @@ const unsigned int INFO_ID_BATTERY_2 = 0x18f021d1;
 const unsigned int INFO_ID_DRIVE = 0x18f026d1;
 
 void infoCallBack(const chassisctrl::frame::ConstPtr& msg);
+void carCtrlCallBack(const chassisctrl::carctrl::ConstPtr& msg);
+
+MotionCtrl motion = MotionCtrl();
+unsigned char id[4] = {0};
+unsigned char data[8] = {0};
+
+ros::Publisher pub_ctrl;
+ros::Subscriber sub_info;
+ros::Subscriber sub_carctrl;
 
 int main(int argc, char **argv) {
     ros::init(argc, argv, "chassisctrl_core");
     ros::NodeHandle n;
 
-    ros::Publisher pub_ctrl = n.advertise<chassisctrl::frame>("frame_ctrl", 1);
-    ros::Subscriber sub_info = n.subscribe<chassisctrl::frame>("frame_info", 1, infoCallBack);
-
-    chassisctrl::frame frame_ctrl;
-
-    // temp
-    MotionCtrl motion = MotionCtrl();
-    unsigned char id[4] = {0};
-    unsigned char data[8] = {0};
+    pub_ctrl = n.advertise<chassisctrl::frame>("frame_ctrl", 1);
+    sub_info = n.subscribe<chassisctrl::frame>("frame_info", 1, infoCallBack);
+    sub_carctrl = n.subscribe<chassisctrl::carctrl>("teleop", 100, carCtrlCallBack);
 
     motion.getId(id);
     motion.setCtrlMode(WIRE_);
-    motion.setAngle(0);
-    if(!motion.getData(data)) {
-        ROS_ERROR("Error: motion control data set failed. ");
-    }
-
-    frame_ctrl.id = charToUInt(id, 4);
-    frame_ctrl.data = charToULL(id, 8);
-
-    pub_ctrl.publish(frame_ctrl);
 
     while(ros::ok()) {
         ros::spinOnce();
@@ -120,4 +115,18 @@ void infoCallBack(const chassisctrl::frame::ConstPtr& msg) {
 
     printf("Drive system: \n");
     printf("Rev: %d\n", drive_info.getRev());
+}
+
+void carCtrlCallBack(const chassisctrl::carctrl::ConstPtr& msg) {
+    chassisctrl::frame frame_ctrl;
+
+    motion.setAngle(msg->angle);
+    if(!motion.getData(data)) {
+        ROS_ERROR("Error: motion control data set failed. ");
+    }
+
+    frame_ctrl.id = charToUInt(id, 4);
+    frame_ctrl.data = charToULL(id, 8);
+
+    pub_ctrl.publish(frame_ctrl);
 }
