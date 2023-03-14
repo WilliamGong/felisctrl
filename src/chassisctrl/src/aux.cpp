@@ -25,7 +25,7 @@ bool uintToChar(unsigned int val, unsigned char *res, int len) {
         return false;
     }
 
-    for(int i = 3; i >= 0; i++) {
+    for(int i = 3; i >= 0; i--) {
         res[i] = val;
         val >>= 8;
     }
@@ -38,8 +38,8 @@ bool ullToChar(unsigned long long val, unsigned char *res, int len) {
         return false;
     }
 
-    for(int i = 7; i >= 0; i++) {
-        res[i] = val;
+    for(int i = 7; i >= 0; i--) {
+        res[i] = (unsigned char)val;
         val >>= 8;
     }
 
@@ -53,6 +53,8 @@ std::string getStr(Gear val) {
         return STR_GEAR_FORWARD;
     }else if(val == BACK) {
         return STR_GEAR_BACK;
+    }else {
+        return nullptr;
     }
 }
 
@@ -67,6 +69,8 @@ std::string getStr(Mode val) {
         return STR_MODE_WIRE_CTRL;
     }else if(val == EMERGENCY) {
         return STR_MODE_EMERGENCY;
+    }else {
+        return nullptr;
     }
 }
 
@@ -77,6 +81,8 @@ std::string getStr(GearSwitch val) {
         return STR_GEARSWITCH_WIRE;
     }else if(val == OFFLINE) {
         return STR_GEARSWITCH_OFFLINE;
+    }else {
+        return nullptr;
     }
 }
 

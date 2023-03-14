@@ -36,10 +36,14 @@ int main(int argc, char **argv) {
     msg.acc = 0;
 
     short current_angle = 0;
-    uint8_t current_acc = 0;
+    int8_t current_acc = 0;
+
+    printf("Use WASD to move");
 
     initKeyboard();
+    int count = 0;
     while(ros::ok()) {
+        count++;
         kbhit();
         if(kbhit()) {
 
@@ -61,17 +65,22 @@ int main(int argc, char **argv) {
                 if(current_angle < -100 ) {
                     current_angle = -100;
                 }
-            }            
+            }else if(ch == 115) {   // s
+                if(current_acc > 0) {
+                    current_acc -= RATE_ACC;
+                }
+            }
 
-            msg.acc = current_acc;
+            msg.acc = (uint8_t)current_acc;
             msg.angle = current_angle;
 
-            //printf("ACC: %d, Angle: %d", current_acc, current_angle);
+            printf("ACC: %d, Angle: %d\n", current_acc, current_angle);
 
             pub.publish(msg);
 
         }else {
 
+            /*
             if(current_angle > 0) {
                 current_angle -= RATE_ANGLE;
             }else if(current_angle < 0) {
@@ -85,6 +94,7 @@ int main(int argc, char **argv) {
             //printf("ACC: %d, Angle: %d", current_acc, current_angle);
 
             pub.publish(msg);
+            */
 
         }
         
@@ -100,7 +110,8 @@ void initKeyboard() {
     tcgetattr(0,&initial_settings);
     new_settings = initial_settings;
     new_settings.c_lflag &= (~ICANON);
-    new_settings.c_lflag |= ECHO;
+    //new_settings.c_lflag |= ECHO;
+    new_settings.c_lflag &= (~ECHO);
     new_settings.c_lflag |= ISIG;
     new_settings.c_cc[VMIN] = 1;
     new_settings.c_cc[VTIME] = 0;

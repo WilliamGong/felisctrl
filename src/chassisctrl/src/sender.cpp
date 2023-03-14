@@ -56,7 +56,12 @@ int main(int argc, char **argv) {
                 info.angle, info.pressure, info.brake, info.remoteMode, info.emergencyStatus, info.remoteStatus);
         */
        //writeData(sendbuf);
-       ROS_INFO("frame: %llx", charToULL(sendbuf, 8));
+       //ROS_INFO("frame: %llx", charToULL(sendbuf, 8));
+       /*
+       for(int i = 0; i < 13; i++) {
+            printf("%x",sendbuf[i]);
+        }
+        */
        write(fd, sendbuf, BUFFSIZE);
     }
 
@@ -103,7 +108,8 @@ void writeData(unsigned char* sendbuf) {
 void ctrlCallBack(const chassisctrl::frame::ConstPtr& msg) {
     unsigned char id[4], data[8];
     uintToChar(msg->id, id, 4);
-    uintToChar(msg->data, data, 8);
+    ullToChar(msg->data, data, 8);
+    
     CanFrame frame = CanFrame();
 
     if(!frame.setId(id)) {

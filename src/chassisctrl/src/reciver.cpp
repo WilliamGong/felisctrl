@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 
     while(ros::ok()) {
         read(fd, recvbuf, BUFFSIZE);
-        ROS_INFO("buf: %llx: ", charToULL(recvbuf, 8));
+        //ROS_INFO("buf: %llx: ", charToULL(recvbuf, 8));
         process(recvbuf, pub);
         /*
         ROS_INFO("Current mode: %d, Fault code: %d, Remote gear: %d, Real time gear: %d, Angle: %d, pressure: %d, Brake: %d, Switch: %d, emergency: %d, Remote status: %d", 
@@ -73,7 +73,7 @@ void process(unsigned char *buf, ros::Publisher pub) {
     frame_info.id = charToUInt(id, 4);
     frame_info.data = charToULL(data, 8);
 
-    ROS_INFO("Frame ID: %x, Data: %llx",  charToUInt(id, 4), charToULL(data, 8));
+    //ROS_INFO("Frame ID: %x, Data: %llx",  charToUInt(id, 4), charToULL(data, 8));
     pub.publish(frame_info);
     
 }
