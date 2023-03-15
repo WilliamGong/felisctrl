@@ -54,7 +54,7 @@ std::string getStr(Gear val) {
     }else if(val == BACK) {
         return STR_GEAR_BACK;
     }else {
-        return nullptr;
+        return "";
     }
 }
 
@@ -70,7 +70,7 @@ std::string getStr(Mode val) {
     }else if(val == EMERGENCY) {
         return STR_MODE_EMERGENCY;
     }else {
-        return nullptr;
+        return "";
     }
 }
 
@@ -82,7 +82,7 @@ std::string getStr(GearSwitch val) {
     }else if(val == OFFLINE) {
         return STR_GEARSWITCH_OFFLINE;
     }else {
-        return nullptr;
+        return "";
     }
 }
 

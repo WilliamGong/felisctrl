@@ -61,6 +61,7 @@ int main(int argc, char **argv) {
        for(int i = 0; i < 13; i++) {
             printf("%x",sendbuf[i]);
         }
+        printf("\n");
         */
        write(fd, sendbuf, BUFFSIZE);
     }

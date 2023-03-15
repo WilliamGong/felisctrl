@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
     ros::init(argc, argv, "chassisctrl_teleop");
     ros::NodeHandle n;
 
-    ros::Publisher pub = n.advertise<chassisctrl::carctrl>("teleop", 100);
+    ros::Publisher pub = n.advertise<chassisctrl::carctrl>("teleop", 1);
     chassisctrl::carctrl msg;
     msg.angle = 0;
     msg.acc = 0;
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
             msg.acc = (uint8_t)current_acc;
             msg.angle = current_angle;
 
-            printf("ACC: %d, Angle: %d\n", current_acc, current_angle);
+            printf("ACC: %d, Angle: %d\n", msg.acc, msg.angle);
 
             pub.publish(msg);
 

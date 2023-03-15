@@ -41,6 +41,7 @@ class MotionCtrl : public Ctrl {
         void setPressure(uint8_t val);
 
         bool getData(unsigned char* res);
+        short getAngle() {return angle_;}
 
     private:
         ModeCtrl control_mode_ = REMOTE_;

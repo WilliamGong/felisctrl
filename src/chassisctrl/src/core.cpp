@@ -18,6 +18,7 @@
 
 #include "ros/ros.h"
 #include <cstdio>
+#include <unistd.h>
 
 const unsigned int INFO_ID_STATUS_1 = 0x18f014d1;
 const unsigned int INFO_ID_STATUS_2 = 0x18f015d1;
@@ -52,7 +53,7 @@ int main(int argc, char **argv) {
 
     pub_ctrl = n.advertise<chassisctrl::frame>("frame_ctrl", 1);
     sub_info = n.subscribe<chassisctrl::frame>("frame_info", 1, infoCallBack);
-    sub_carctrl = n.subscribe<chassisctrl::carctrl>("teleop", 100, carCtrlCallBack);
+    sub_carctrl = n.subscribe<chassisctrl::carctrl>("teleop", 1, carCtrlCallBack);
 
     status_info = StatusInfo();
     milage_info = MileageInfo();
@@ -64,11 +65,26 @@ int main(int argc, char **argv) {
 
     motion.getId(id);
     motion.setCtrlMode(WIRE_);
-    motion.setGear(FORWARD);
+    //motion.setAngle(100);
+    //motion.setGear(FORWARD);
 
     ROS_INFO("Init completed. ");
 
+    chassisctrl::frame frame_ctrl;
+
+    if(!motion.getData(data)) {
+        ROS_ERROR("Error: motion control data set failed. ");
+    }
+
+    frame_ctrl.id = charToUInt(id, 4);
+    frame_ctrl.data = charToULL(data, 8);
+
+    pub_ctrl.publish(frame_ctrl);
+
+    //ros::Rate loop_rate(20);
     while(ros::ok()) {
+        //ROS_INFO("Current angle: %d", motion.getAngle());
+        pub_ctrl.publish(frame_ctrl);
         ros::spinOnce();
     }
     return 0;
@@ -78,6 +94,13 @@ void infoCallBack(const chassisctrl::frame::ConstPtr& msg) {
     unsigned int id = msg->id;
     unsigned char data[8];
     ullToChar(msg->data, data, 8);
+
+    if(id == INFO_ID_STATUS_2) {
+        for(int i = 0; i < 8; i++) {
+            printf("%x",data[i]);
+        }
+        printf("\n");
+    }
 
     //ROS_INFO("id: %x, data: %llx", msg->id, msg->data);
 
@@ -99,6 +122,8 @@ void infoCallBack(const chassisctrl::frame::ConstPtr& msg) {
     printf("Mode: %s, Error code: %x, Remote gear: %s, Current gear: %s, remote acc: %d, current acc: %d, angle: %d\n", 
             getStr(status_info.getMode()).c_str(), 
             (unsigned short)status_info.getError(), 
+            //status_info.getRemoteGear(),
+            //status_info.getCurrentGear(),
             getStr(status_info.getRemoteGear()).c_str(), 
             getStr(status_info.getCurrentGear()).c_str(), 
             status_info.getRemoteAcc(), 
@@ -136,17 +161,8 @@ void infoCallBack(const chassisctrl::frame::ConstPtr& msg) {
 void carCtrlCallBack(const chassisctrl::carctrl::ConstPtr& msg) {
     //ROS_INFO("ctrl callback");
     //ROS_WARN("acc: %d, angle: %d", msg->acc, msg->angle);
-    chassisctrl::frame frame_ctrl;
 
+    motion.setCtrlMode(WIRE_);
     motion.setAngle(msg->angle);
     motion.setAccelerator(msg->acc);
-    if(!motion.getData(data)) {
-        ROS_ERROR("Error: motion control data set failed. ");
-    }
-
-    frame_ctrl.id = charToUInt(id, 4);
-    frame_ctrl.data = charToULL(data, 8);
-    //ROS_WARN("%lx", frame_ctrl.data);
-
-    pub_ctrl.publish(frame_ctrl);
 }

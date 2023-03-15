@@ -60,7 +60,7 @@ bool StatusInfo::setData(const unsigned int id, const unsigned char *data) {
 
  }else if(id == FRAME_ID_2) {
 
-    remote_gear_ = (Gear)data[0];
+    remote_gear_ = (Gear)(data[0] & 0x0f);
     current_gear_ = (Gear)(data[0] >> 4);
     remote_accelerator_ = data[1];
     current_accelerator_ = data[2];
