@@ -35,3 +35,6 @@ rosrun chassisctrl chassisctrl_sender
 use teleop:
 
     rosrun chassisctrl chassisctrl_teleop
+
+# Attention
+Teleop dosen't work now. It needs to set control paramaters in `chassisctrl_core` instead of `chassisctrl_teleop` to control. 
